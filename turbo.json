@@ -2,12 +2,7 @@
   "$schema": "http://turbo.build/schema.json",
   "tasks": {
     "build": {
-      "env": [
-        "CLOUDFLARE_ENV",
-        "CLOUDFLARE_RSBUILD_WRANGLER_CONFIG_PATH",
-        "CLOUDFLARE_VITE_WRANGLER_CONFIG_PATH",
-        "NODE_ENV"
-      ],
+      "env": ["CLOUDFLARE_ENV", "CLOUDFLARE_RSBUILD_WRANGLER_CONFIG_PATH", "NODE_ENV"],
       "outputs": ["dist/**"]
     },
     "check:type": {

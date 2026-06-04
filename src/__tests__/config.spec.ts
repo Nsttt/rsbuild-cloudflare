@@ -47,4 +47,36 @@ describe("resolvePluginConfig", () => {
     expect(resolved.configPath).toBe(join(root, "wrangler.json"));
     expect(resolved.workerConfig.main).toBe("src/index.ts");
   });
+
+  test("resolves wrangler config from Rsbuild environment variable", ({ expect }) => {
+    const root = mkdtempSync(join(tmpdir(), "rsbuild-cloudflare-"));
+    const previousConfigPath = process.env.CLOUDFLARE_RSBUILD_WRANGLER_CONFIG_PATH;
+    process.env.CLOUDFLARE_RSBUILD_WRANGLER_CONFIG_PATH = "wrangler.json";
+    writeFileSync(
+      join(root, "wrangler.json"),
+      JSON.stringify({
+        name: "env-worker",
+        main: "src/index.ts",
+        compatibility_date: "2025-01-01",
+      }),
+    );
+
+    try {
+      const resolved = resolvePluginConfig({ persistState: false }, { root });
+
+      expect(resolved.environmentName).toBe("env_worker");
+      expect(resolved.configPath).toBe(join(root, "wrangler.json"));
+      expect(resolved.workerConfig.main).toBe("src/index.ts");
+    } finally {
+      restoreEnv("CLOUDFLARE_RSBUILD_WRANGLER_CONFIG_PATH", previousConfigPath);
+    }
+  });
 });
+
+function restoreEnv(name: string, value: string | undefined): void {
+  if (value === undefined) {
+    delete process.env[name];
+    return;
+  }
+  process.env[name] = value;
+}

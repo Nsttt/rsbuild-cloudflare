@@ -74,8 +74,41 @@ cloudflare({
 - `CLOUDFLARE_ENV` selects a Wrangler environment.
 - `CLOUDFLARE_RSBUILD_WRANGLER_CONFIG_PATH` sets the Wrangler config path.
 
-The plugin also honors `CLOUDFLARE_VITE_WRANGLER_CONFIG_PATH` as a migration
-fallback.
+## Development
+
+`rsbuild dev` builds the Worker environment to disk and serves requests through
+Miniflare. The Worker receives the same module output that Rsbuild writes for a
+production build, so development and deploy output stay aligned.
+
+Local persistence is enabled by default. Disable it with `persistState: false`
+or provide a custom persistence directory:
+
+```ts
+cloudflare({
+  persistState: {
+    path: ".wrangler/state",
+  },
+});
+```
+
+Set `inspectorPort: false` to disable the Worker inspector, or pass a port
+number to pin it.
+
+## Build Output
+
+`rsbuild build` emits a Worker environment under
+`dist/<worker_environment_name>`. The output includes:
+
+- bundled module Worker files
+- a generated `wrangler.json` with `main` pointing at the built Worker entry
+- `.wrangler/deploy/config.json` so `wrangler deploy` can discover the generated
+  config
+
+After building, deploy from the project root with:
+
+```sh
+wrangler deploy
+```
 
 ## Examples
 
@@ -84,7 +117,7 @@ fallback.
 - `examples/react-app` builds a React browser app and Cloudflare Worker API in
   one Rsbuild project without a `wrangler.json` file.
 
-## Initial Scope
+## Current Scope
 
 This package is the Rsbuild equivalent of the Cloudflare Vite plugin's core
 Worker loop:
@@ -94,40 +127,3 @@ Worker loop:
 - `wrangler.json` emission beside the compiled Worker entry
 - `.wrangler/deploy/config.json` emission for Wrangler deploy discovery
 - Miniflare-backed development middleware
-
-Full parity with `@cloudflare/vite-plugin` is not included yet. Future work
-should extract shared Wrangler/Miniflare config helpers, add assets/static-site
-support, add remote binding proxy support, handle framework-specific SSR
-integrations, and expand the test matrix with Rsbuild fixtures.
-
-## Publishing
-
-Run the local release gate before publishing:
-
-```sh
-pnpm release:check
-```
-
-For the first manual publish from a local checkout:
-
-```sh
-pnpm view rsbuild-cloudflare version
-pnpm whoami
-pnpm login
-pnpm publish --access public
-git tag v0.1.0
-git push origin v0.1.0
-```
-
-If `pnpm view` returns 404, the package name is still unpublished. If
-`pnpm whoami` fails, authenticate with npm before publishing. Create the git tag
-only after npm publish succeeds.
-
-Future releases can use Changesets:
-
-```sh
-pnpm changeset
-pnpm release:version
-pnpm release:check
-pnpm release:publish
-```

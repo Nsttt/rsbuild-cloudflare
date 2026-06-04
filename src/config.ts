@@ -39,9 +39,7 @@ export function resolvePluginConfig(
   const root = path.resolve(options.root);
   const cloudflareEnv = process.env.CLOUDFLARE_ENV;
   const requestedConfigPath =
-    pluginConfig.configPath ??
-    process.env.CLOUDFLARE_RSBUILD_WRANGLER_CONFIG_PATH ??
-    process.env.CLOUDFLARE_VITE_WRANGLER_CONFIG_PATH;
+    pluginConfig.configPath ?? process.env.CLOUDFLARE_RSBUILD_WRANGLER_CONFIG_PATH;
   const configPath = requestedConfigPath ? path.resolve(root, requestedConfigPath) : undefined;
 
   const workerConfig = configPath
