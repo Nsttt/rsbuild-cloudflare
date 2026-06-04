@@ -8,7 +8,7 @@ import type { Unstable_RawConfig } from "wrangler";
 
 export function createOutputConfig(
 	resolvedConfig: ResolvedPluginConfig,
-	main: string
+	main: string,
 ): Unstable_RawConfig {
 	const {
 		configPath: _configPath,
@@ -35,29 +35,22 @@ export function createOutputConfig(
 export function emitWorkerConfigAsset(
 	resolvedConfig: ResolvedPluginConfig,
 	assets: Record<string, Rspack.sources.Source>,
-	sources: Pick<typeof Rspack.sources, "RawSource">
+	sources: Pick<typeof Rspack.sources, "RawSource">,
 ): void {
 	assets["wrangler.json"] = new sources.RawSource(
-		JSON.stringify(
-			createOutputConfig(resolvedConfig, `${WORKER_ENTRY_NAME}.js`)
-		)
+		JSON.stringify(createOutputConfig(resolvedConfig, `${WORKER_ENTRY_NAME}.js`)),
 	);
 }
 
 export function writeDeployConfig(
 	resolvedConfig: ResolvedPluginConfig,
-	rsbuildConfig: RsbuildConfig
+	rsbuildConfig: RsbuildConfig,
 ): void {
-	const deployConfigPath = path.resolve(
-		resolvedConfig.root,
-		".wrangler",
-		"deploy",
-		"config.json"
-	);
+	const deployConfigPath = path.resolve(resolvedConfig.root, ".wrangler", "deploy", "config.json");
 	const deployConfigDirectory = path.dirname(deployConfigPath);
 	const workerOutputDirectory = path.resolve(
 		resolvedConfig.root,
-		getOutputDirectory(rsbuildConfig, resolvedConfig.environmentName)
+		getOutputDirectory(rsbuildConfig, resolvedConfig.environmentName),
 	);
 
 	fs.mkdirSync(deployConfigDirectory, { recursive: true });
@@ -66,9 +59,9 @@ export function writeDeployConfig(
 		JSON.stringify({
 			configPath: path.relative(
 				deployConfigDirectory,
-				path.join(workerOutputDirectory, "wrangler.json")
+				path.join(workerOutputDirectory, "wrangler.json"),
 			),
 			auxiliaryWorkers: [],
-		})
+		}),
 	);
 }

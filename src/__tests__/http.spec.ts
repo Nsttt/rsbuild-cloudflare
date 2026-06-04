@@ -8,10 +8,7 @@ describe("writeResponse", () => {
 	test("preserves multiple Set-Cookie headers", async ({ expect }) => {
 		const headers = new Headers();
 		headers.append("set-cookie", "session=abc; Path=/");
-		headers.append(
-			"set-cookie",
-			"theme=dark; Expires=Thu, 01 Jan 2026 00:00:00 GMT"
-		);
+		headers.append("set-cookie", "theme=dark; Expires=Thu, 01 Jan 2026 00:00:00 GMT");
 		headers.set("content-type", "text/plain");
 
 		const response = new Response("ok", { headers });
@@ -21,10 +18,7 @@ describe("writeResponse", () => {
 				callback();
 			},
 		}) as http.ServerResponse;
-		serverResponse.setHeader = (
-			name: string,
-			value: number | string | string[]
-		) => {
+		serverResponse.setHeader = (name: string, value: number | string | string[]) => {
 			recordedHeaders.set(name.toLowerCase(), value);
 			return serverResponse;
 		};

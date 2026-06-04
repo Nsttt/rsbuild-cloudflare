@@ -5,11 +5,7 @@
 :root {
 	color: #17201a;
 	background: #f4f0e7;
-	font-family:
-		"IBM Plex Sans",
-		"Avenir Next",
-		"Helvetica Neue",
-		sans-serif;
+	font-family: "IBM Plex Sans", "Avenir Next", "Helvetica Neue", sans-serif;
 }
 
 body {
@@ -18,8 +14,7 @@ body {
 	min-height: 100vh;
 	background:
 		linear-gradient(135deg, rgba(245, 183, 0, 0.22), transparent 36rem),
-		radial-gradient(circle at 88% 12%, rgba(0, 118, 182, 0.18), transparent 22rem),
-		#f4f0e7;
+		radial-gradient(circle at 88% 12%, rgba(0, 118, 182, 0.18), transparent 22rem), #f4f0e7;
 }
 
 button,

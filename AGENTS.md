@@ -29,6 +29,9 @@ Experimental Rsbuild adapter for Cloudflare Workers. Exports `cloudflare()` from
 - `pnpm build`
 - `pnpm examples:build`
 - `pnpm changeset`
+- `pnpm check:format`
+- `pnpm format`
+- `pnpm lint`
 - `pnpm release:check`
 - `pnpm release:version`
 - `pnpm release:publish`

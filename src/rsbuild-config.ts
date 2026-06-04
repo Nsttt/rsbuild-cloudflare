@@ -1,19 +1,11 @@
 import * as path from "node:path";
-import {
-	cloudflareBuiltInModules,
-	defaultConditions,
-	WORKER_ENTRY_NAME,
-} from "./constants";
+import { cloudflareBuiltInModules, defaultConditions, WORKER_ENTRY_NAME } from "./constants";
 import type { ResolvedPluginConfig } from "./config";
-import type {
-	EnvironmentConfig,
-	RsbuildConfig,
-	RsbuildEntryDescription,
-} from "@rsbuild/core";
+import type { EnvironmentConfig, RsbuildConfig, RsbuildEntryDescription } from "@rsbuild/core";
 
 export function createWorkerEnvironmentConfig(
 	resolvedConfig: ResolvedPluginConfig,
-	rsbuildConfig: RsbuildConfig
+	rsbuildConfig: RsbuildConfig,
 ): EnvironmentConfig {
 	const entry: RsbuildEntryDescription = {
 		import: path.resolve(resolvedConfig.root, resolvedConfig.workerConfig.main),
@@ -49,8 +41,7 @@ export function createWorkerEnvironmentConfig(
 						if (
 							request &&
 							cloudflareBuiltInModules.some(
-								(moduleName) =>
-									request === moduleName || request.startsWith(`${moduleName}/`)
+								(moduleName) => request === moduleName || request.startsWith(`${moduleName}/`),
 							)
 						) {
 							callback(undefined, request);
@@ -73,10 +64,7 @@ export function createWorkerEnvironmentConfig(
 	};
 }
 
-export function getOutputDirectory(
-	config: RsbuildConfig,
-	environmentName: string
-): string {
+export function getOutputDirectory(config: RsbuildConfig, environmentName: string): string {
 	const rootDistPath = getRootDistPath(config);
 	return path.join(rootDistPath, environmentName);
 }

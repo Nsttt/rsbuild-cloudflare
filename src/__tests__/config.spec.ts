@@ -15,7 +15,7 @@ describe("resolvePluginConfig", () => {
 				},
 				persistState: false,
 			},
-			{ root }
+			{ root },
 		);
 
 		expect(resolved.environmentName).toBe("inline_worker");
@@ -32,7 +32,7 @@ describe("resolvePluginConfig", () => {
 				name: "file-worker",
 				main: "src/index.ts",
 				compatibility_date: "2025-01-01",
-			})
+			}),
 		);
 
 		const resolved = resolvePluginConfig(
@@ -40,7 +40,7 @@ describe("resolvePluginConfig", () => {
 				configPath: "wrangler.json",
 				persistState: false,
 			},
-			{ root }
+			{ root },
 		);
 
 		expect(resolved.environmentName).toBe("file_worker");

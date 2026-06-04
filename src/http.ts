@@ -7,10 +7,7 @@ import type { ReadableStream as NodeReadableStream } from "node:stream/web";
 
 export function toRequest(req: http.IncomingMessage): MiniflareRequest {
 	const host = req.headers.host ?? "localhost";
-	const protocol =
-		(req.socket as { encrypted?: boolean }).encrypted === true
-			? "https"
-			: "http";
+	const protocol = (req.socket as { encrypted?: boolean }).encrypted === true ? "https" : "http";
 	const url = new URL(req.url ?? "/", `${protocol}://${host}`);
 	const headers = new Headers();
 
@@ -44,7 +41,7 @@ export function toRequest(req: http.IncomingMessage): MiniflareRequest {
 
 export async function writeResponse(
 	res: http.ServerResponse,
-	response: MiniflareResponse
+	response: MiniflareResponse,
 ): Promise<void> {
 	res.statusCode = response.status;
 	res.statusMessage = response.statusText;
@@ -64,10 +61,5 @@ export async function writeResponse(
 		return;
 	}
 
-	await pipeline(
-		Readable.fromWeb(
-			response.body as unknown as NodeReadableStream<Uint8Array>
-		),
-		res
-	);
+	await pipeline(Readable.fromWeb(response.body as unknown as NodeReadableStream<Uint8Array>), res);
 }

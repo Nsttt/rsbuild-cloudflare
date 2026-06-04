@@ -6,9 +6,7 @@ import { resolvePluginConfig } from "../config";
 import { createMiniflareOptions } from "../miniflare";
 
 describe("createMiniflareOptions", () => {
-	test("loads emitted module files instead of Wrangler rule globs", ({
-		expect,
-	}) => {
+	test("loads emitted module files instead of Wrangler rule globs", ({ expect }) => {
 		const root = mkdtempSync(join(tmpdir(), "rsbuild-cloudflare-"));
 		const outputDirectory = join(root, "dist/test_worker");
 		mkdirSync(outputDirectory, { recursive: true });
@@ -24,7 +22,7 @@ describe("createMiniflareOptions", () => {
 				},
 				persistState: false,
 			},
-			{ root }
+			{ root },
 		);
 
 		const options = createMiniflareOptions(resolvedConfig, outputDirectory);
@@ -40,7 +38,7 @@ describe("createMiniflareOptions", () => {
 			expect.arrayContaining([
 				{ type: "ESModule", path: "index.js" },
 				{ type: "ESModule", path: "chunk.js" },
-			])
+			]),
 		);
 		expect(worker.modules).not.toContainEqual({
 			type: "ESModule",

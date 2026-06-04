@@ -9,19 +9,15 @@
 		"rsbuild-plugin",
 		"workers"
 	],
-	"license": "MIT",
-	"author": "Nestor Lopez <nestor@nstlopez.com>",
 	"homepage": "https://github.com/Nsttt/rsbuild-cloudflare#readme",
 	"bugs": {
 		"url": "https://github.com/Nsttt/rsbuild-cloudflare/issues"
 	},
+	"license": "MIT",
+	"author": "Nestor Lopez <nestor@nstlopez.com>",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Nsttt/rsbuild-cloudflare.git"
-	},
-	"packageManager": "pnpm@10.33.0",
-	"engines": {
-		"node": ">=20.0.0"
 	},
 	"files": [
 		"dist",
@@ -43,11 +39,15 @@
 	"scripts": {
 		"build": "rslib",
 		"changeset": "changeset",
-		"check": "pnpm check:type && pnpm test:ci && pnpm build",
+		"check": "pnpm check:format && pnpm check:type && pnpm test:ci && pnpm build",
+		"check:format": "oxfmt --check .",
 		"check:type": "tsc --build",
 		"dev": "rslib --watch",
 		"examples:build": "pnpm --dir examples build",
 		"examples:check:type": "pnpm --dir examples check:type",
+		"format": "oxfmt .",
+		"lint": "pnpm lint:rslint",
+		"lint:rslint": "rslint --tsconfig tsconfig.json",
 		"prepack": "pnpm build",
 		"prepublishOnly": "pnpm release:check",
 		"publish:dry-run": "pnpm publish --dry-run --no-git-checks",
@@ -68,12 +68,18 @@
 		"@microsoft/api-extractor": "^7.52.8",
 		"@rsbuild/core": "2.0.9",
 		"@rslib/core": "0.22.0",
+		"@rslint/cli": "^0.0.1",
 		"@types/node": "22.15.17",
+		"oxfmt": "^0.53.0",
 		"typescript": "5.8.3",
 		"vitest": "4.1.0"
 	},
 	"peerDependencies": {
 		"@rsbuild/core": "^2.0.0",
 		"wrangler": "^4.98.0"
-	}
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"packageManager": "pnpm@10.33.0"
 }

@@ -34,7 +34,7 @@ export function resolvePluginConfig(
 	pluginConfig: PluginConfig,
 	options: {
 		root: string;
-	}
+	},
 ): ResolvedPluginConfig {
 	const root = path.resolve(options.root);
 	const cloudflareEnv = process.env.CLOUDFLARE_ENV;
@@ -42,28 +42,23 @@ export function resolvePluginConfig(
 		pluginConfig.configPath ??
 		process.env.CLOUDFLARE_RSBUILD_WRANGLER_CONFIG_PATH ??
 		process.env.CLOUDFLARE_VITE_WRANGLER_CONFIG_PATH;
-	const configPath = requestedConfigPath
-		? path.resolve(root, requestedConfigPath)
-		: undefined;
+	const configPath = requestedConfigPath ? path.resolve(root, requestedConfigPath) : undefined;
 
 	const workerConfig = configPath
 		? wrangler.unstable_readConfig(
 				{ config: configPath, env: cloudflareEnv },
-				{ preserveOriginalMain: true }
+				{ preserveOriginalMain: true },
 			)
 		: structuredClone(wrangler.unstable_defaultWranglerConfig);
 
-	const customizedConfig = customizeWorkerConfig(
-		workerConfig,
-		pluginConfig.config
-	);
+	const customizedConfig = customizeWorkerConfig(workerConfig, pluginConfig.config);
 	customizedConfig.compatibility_date ??= DEFAULT_COMPATIBILITY_DATE;
 	customizedConfig.name ??= wrangler.unstable_getWorkerNameFromProject(root);
 	customizedConfig.topLevelName ??= customizedConfig.name;
 
 	if (!customizedConfig.main) {
 		throw new Error(
-			"Cloudflare Rsbuild plugin requires a Worker entrypoint. Set `main` in wrangler.json or pass `cloudflare({ config: { main: ... } })`."
+			"Cloudflare Rsbuild plugin requires a Worker entrypoint. Set `main` in wrangler.json or pass `cloudflare({ config: { main: ... } })`.",
 		);
 	}
 
@@ -80,16 +75,12 @@ export function resolvePluginConfig(
 
 function customizeWorkerConfig(
 	workerConfig: Unstable_Config,
-	configCustomizer: WorkerConfigCustomizer | undefined
+	configCustomizer: WorkerConfigCustomizer | undefined,
 ): Unstable_Config {
 	const configResult =
-		typeof configCustomizer === "function"
-			? configCustomizer(workerConfig)
-			: configCustomizer;
+		typeof configCustomizer === "function" ? configCustomizer(workerConfig) : configCustomizer;
 
-	return configResult
-		? ({ ...workerConfig, ...configResult } as Unstable_Config)
-		: workerConfig;
+	return configResult ? ({ ...workerConfig, ...configResult } as Unstable_Config) : workerConfig;
 }
 
 function workerNameToEnvironmentName(workerName: string): string {

@@ -40,7 +40,7 @@ export class MiniflareController {
 
 export function createMiniflareOptions(
 	resolvedConfig: ResolvedPluginConfig,
-	workerOutputDirectory: string
+	workerOutputDirectory: string,
 ): MiniflareOptions {
 	const main = path.join(workerOutputDirectory, "index.js");
 	const runtimeConfig: Unstable_Config = {
@@ -52,10 +52,9 @@ export function createMiniflareOptions(
 	};
 	const miniflareWorkerOptions = wrangler.unstable_getMiniflareWorkerOptions(
 		runtimeConfig,
-		resolvedConfig.cloudflareEnv
+		resolvedConfig.cloudflareEnv,
 	);
-	const { modulesRules, ...workerOptions } =
-		miniflareWorkerOptions.workerOptions;
+	const { modulesRules, ...workerOptions } = miniflareWorkerOptions.workerOptions;
 	const worker = {
 		...workerOptions,
 		name: workerOptions.name ?? resolvedConfig.workerConfig.name,
@@ -65,13 +64,8 @@ export function createMiniflareOptions(
 	return {
 		log: new Log(LogLevel.WARN),
 		inspectorPort:
-			resolvedConfig.inspectorPort === false
-				? undefined
-				: resolvedConfig.inspectorPort,
-		defaultPersistRoot: getPersistenceRoot(
-			resolvedConfig.root,
-			resolvedConfig.persistState
-		),
+			resolvedConfig.inspectorPort === false ? undefined : resolvedConfig.inspectorPort,
+		defaultPersistRoot: getPersistenceRoot(resolvedConfig.root, resolvedConfig.persistState),
 		telemetry: { enabled: false },
 		workers: [worker, ...miniflareWorkerOptions.externalWorkers],
 	};
@@ -79,7 +73,7 @@ export function createMiniflareOptions(
 
 function getWorkerModules(
 	main: string,
-	modulesRules: SourcelessWorkerOptions["modulesRules"]
+	modulesRules: SourcelessWorkerOptions["modulesRules"],
 ): Pick<WorkerOptions, "rootPath" | "modules"> {
 	const rootPath = path.dirname(main);
 	const entryPath = path.basename(main);
@@ -92,12 +86,10 @@ function getWorkerModules(
 				type: "ESModule",
 				path: entryPath,
 			} as const,
-			...getAdditionalModulePaths(rootPath, entryPath, rules).map(
-				(modulePath) => ({
-					type: "ESModule" as const,
-					path: modulePath,
-				})
-			),
+			...getAdditionalModulePaths(rootPath, entryPath, rules).map((modulePath) => ({
+				type: "ESModule" as const,
+				path: modulePath,
+			})),
 		],
 	};
 }
@@ -105,7 +97,7 @@ function getWorkerModules(
 function getAdditionalModulePaths(
 	rootPath: string,
 	entryPath: string,
-	modulesRules: NonNullable<SourcelessWorkerOptions["modulesRules"]>
+	modulesRules: NonNullable<SourcelessWorkerOptions["modulesRules"]>,
 ): string[] {
 	const hasModuleRule = modulesRules.some(({ type }) => type === "ESModule");
 	if (!hasModuleRule || !fs.existsSync(rootPath)) {
@@ -114,28 +106,22 @@ function getAdditionalModulePaths(
 
 	return listFiles(rootPath).filter(
 		(modulePath) =>
-			modulePath !== entryPath &&
-			(modulePath.endsWith(".js") || modulePath.endsWith(".mjs"))
+			modulePath !== entryPath && (modulePath.endsWith(".js") || modulePath.endsWith(".mjs")),
 	);
 }
 
 function listFiles(rootPath: string, currentPath = ""): string[] {
 	const absolutePath = path.join(rootPath, currentPath);
-	return fs
-		.readdirSync(absolutePath, { withFileTypes: true })
-		.flatMap((dirent) => {
-			const modulePath = path.join(currentPath, dirent.name);
-			if (dirent.isDirectory()) {
-				return listFiles(rootPath, modulePath);
-			}
-			return dirent.isFile() ? [modulePath] : [];
-		});
+	return fs.readdirSync(absolutePath, { withFileTypes: true }).flatMap((dirent) => {
+		const modulePath = path.join(currentPath, dirent.name);
+		if (dirent.isDirectory()) {
+			return listFiles(rootPath, modulePath);
+		}
+		return dirent.isFile() ? [modulePath] : [];
+	});
 }
 
-function getPersistenceRoot(
-	root: string,
-	persistState: PersistState
-): string | undefined {
+function getPersistenceRoot(root: string, persistState: PersistState): string | undefined {
 	if (persistState === false) {
 		return;
 	}
@@ -143,6 +129,6 @@ function getPersistenceRoot(
 	return path.resolve(
 		root,
 		typeof persistState === "object" ? persistState.path : ".wrangler/state",
-		"v3"
+		"v3",
 	);
 }

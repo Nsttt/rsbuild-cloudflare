@@ -4,10 +4,7 @@ import { resolvePluginConfig } from "./config";
 import { toRequest, writeResponse } from "./http";
 import { createMiniflareOptions, MiniflareController } from "./miniflare";
 import { emitWorkerConfigAsset, writeDeployConfig } from "./output";
-import {
-	createWorkerEnvironmentConfig,
-	getOutputDirectory,
-} from "./rsbuild-config";
+import { createWorkerEnvironmentConfig, getOutputDirectory } from "./rsbuild-config";
 import type { PluginConfig, ResolvedPluginConfig } from "./config";
 import type { RsbuildPlugin } from "@rsbuild/core";
 
@@ -34,10 +31,7 @@ export function cloudflare(pluginConfig: PluginConfig = {}): RsbuildPlugin {
 
 				return mergeRsbuildConfig(config, {
 					environments: {
-						[resolvedConfig.environmentName]: createWorkerEnvironmentConfig(
-							resolvedConfig,
-							config
-						),
+						[resolvedConfig.environmentName]: createWorkerEnvironmentConfig(resolvedConfig, config),
 					},
 					dev: {
 						writeToDisk: true,
@@ -45,19 +39,13 @@ export function cloudflare(pluginConfig: PluginConfig = {}): RsbuildPlugin {
 				});
 			});
 
-			api.processAssets(
-				{ stage: "additional" },
-				({ assets, environment, sources }) => {
-					if (
-						!resolvedConfig ||
-						environment.name !== resolvedConfig.environmentName
-					) {
-						return;
-					}
-
-					emitWorkerConfigAsset(resolvedConfig, assets, sources);
+			api.processAssets({ stage: "additional" }, ({ assets, environment, sources }) => {
+				if (!resolvedConfig || environment.name !== resolvedConfig.environmentName) {
+					return;
 				}
-			);
+
+				emitWorkerConfigAsset(resolvedConfig, assets, sources);
+			});
 
 			api.onAfterBuild(() => {
 				if (!resolvedConfig) {
@@ -77,12 +65,9 @@ export function cloudflare(pluginConfig: PluginConfig = {}): RsbuildPlugin {
 						resolvedConfig,
 						path.resolve(
 							resolvedConfig.root,
-							getOutputDirectory(
-								api.getRsbuildConfig(),
-								resolvedConfig.environmentName
-							)
-						)
-					)
+							getOutputDirectory(api.getRsbuildConfig(), resolvedConfig.environmentName),
+						),
+					),
 				);
 			});
 

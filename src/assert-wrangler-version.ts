@@ -6,7 +6,7 @@ export async function assertWranglerVersion(): Promise<void> {
 		typeof wrangler.unstable_getMiniflareWorkerOptions !== "function"
 	) {
 		throw new Error(
-			"`rsbuild-cloudflare` requires a Wrangler version with unstable integration APIs."
+			"`rsbuild-cloudflare` requires a Wrangler version with unstable integration APIs.",
 		);
 	}
 }

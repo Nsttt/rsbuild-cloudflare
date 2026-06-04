@@ -7,14 +7,12 @@ import { describe, test } from "vitest";
 import { cloudflare } from "../index";
 
 describe("cloudflare", () => {
-	test("builds a worker environment and emits wrangler config", async ({
-		expect,
-	}) => {
+	test("builds a worker environment and emits wrangler config", async ({ expect }) => {
 		const root = mkdtempSync(join(tmpdir(), "rsbuild-cloudflare-"));
 		await mkdir(join(root, "src"), { recursive: true });
 		writeFileSync(
 			join(root, "src/index.ts"),
-			`export default { fetch() { return new Response("ok"); } };`
+			`export default { fetch() { return new Response("ok"); } };`,
 		);
 		writeFileSync(
 			join(root, "wrangler.json"),
@@ -22,7 +20,7 @@ describe("cloudflare", () => {
 				name: "test-worker",
 				main: "src/index.ts",
 				compatibility_date: "2025-01-01",
-			})
+			}),
 		);
 
 		const rsbuild = await createRsbuild({
@@ -42,12 +40,10 @@ describe("cloudflare", () => {
 
 		const workerOutDir = join(root, "dist/test_worker");
 		expect(existsSync(join(workerOutDir, "index.js"))).toBe(true);
-		expect(readFileSync(join(workerOutDir, "index.js"), "utf8")).toContain(
-			"export"
-		);
+		expect(readFileSync(join(workerOutDir, "index.js"), "utf8")).toContain("export");
 		expect(existsSync(join(workerOutDir, "wrangler.json"))).toBe(true);
 		const outputConfig = JSON.parse(
-			readFileSync(join(workerOutDir, "wrangler.json"), "utf8")
+			readFileSync(join(workerOutDir, "wrangler.json"), "utf8"),
 		) as Record<string, unknown>;
 		expect(outputConfig).toMatchObject({
 			name: "test-worker",

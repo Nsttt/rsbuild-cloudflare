@@ -41,8 +41,8 @@ export function App() {
 				<p className="eyebrow">Rsbuild + Cloudflare Workers</p>
 				<h1>React app, Worker API, one build graph.</h1>
 				<p className="lede">
-					The browser entry is compiled by Rsbuild React support while the
-					Worker entry is emitted through rsbuild-cloudflare.
+					The browser entry is compiled by Rsbuild React support while the Worker entry is emitted
+					through rsbuild-cloudflare.
 				</p>
 			</section>
 
