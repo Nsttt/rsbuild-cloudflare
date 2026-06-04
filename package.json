@@ -1,6 +1,6 @@
 {
 	"name": "rsbuild-cloudflare",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "Cloudflare Workers plugin for Rsbuild",
 	"keywords": [
 		"cloudflare",
@@ -10,6 +10,15 @@
 		"workers"
 	],
 	"license": "MIT",
+	"author": "Nestor Lopez <nestor@nstlopez.com>",
+	"homepage": "https://github.com/Nsttt/rsbuild-cloudflare#readme",
+	"bugs": {
+		"url": "https://github.com/Nsttt/rsbuild-cloudflare/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Nsttt/rsbuild-cloudflare.git"
+	},
 	"packageManager": "pnpm@10.33.0",
 	"engines": {
 		"node": ">=20.0.0"
@@ -33,12 +42,18 @@
 	},
 	"scripts": {
 		"build": "rslib",
+		"changeset": "changeset",
 		"check": "pnpm check:type && pnpm test:ci && pnpm build",
 		"check:type": "tsc --build",
 		"dev": "rslib --watch",
 		"examples:build": "pnpm --dir examples build",
 		"examples:check:type": "pnpm --dir examples check:type",
 		"prepack": "pnpm build",
+		"prepublishOnly": "pnpm release:check",
+		"publish:dry-run": "pnpm publish --dry-run --no-git-checks",
+		"release:check": "pnpm check && pnpm examples:check:type && pnpm examples:build && pnpm pack --dry-run",
+		"release:publish": "changeset publish",
+		"release:version": "changeset version",
 		"test": "vitest run",
 		"test:ci": "pnpm test",
 		"test:watch": "vitest"
@@ -48,6 +63,7 @@
 		"wrangler": "^4.98.0"
 	},
 	"devDependencies": {
+		"@changesets/cli": "^2.31.0",
 		"@cloudflare/workers-types": "^4.20260603.1",
 		"@microsoft/api-extractor": "^7.52.8",
 		"@rsbuild/core": "2.0.9",

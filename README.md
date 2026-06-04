@@ -6,6 +6,12 @@ The plugin reads Wrangler configuration, configures an Rsbuild Worker
 environment, serves development requests through Miniflare, and emits deployable
 Worker output.
 
+## Installation
+
+```sh
+pnpm add -D rsbuild-cloudflare @rsbuild/core wrangler
+```
+
 ```ts
 // rsbuild.config.ts
 
@@ -93,3 +99,12 @@ Full parity with `@cloudflare/vite-plugin` is not included yet. Future work
 should extract shared Wrangler/Miniflare config helpers, add assets/static-site
 support, add remote binding proxy support, handle framework-specific SSR
 integrations, and expand the test matrix with Rsbuild fixtures.
+
+## Publishing
+
+Run the local release gate before publishing:
+
+```sh
+pnpm release:check
+pnpm release:publish
+```
