@@ -48,6 +48,21 @@ cloudflare({
 });
 ```
 
+Inline config can be used without a `wrangler.json` file:
+
+```ts
+cloudflare({
+	config: {
+		name: "my-worker",
+		main: "src/index.ts",
+		compatibility_date: "2025-01-01",
+		vars: {
+			MESSAGE: "hello",
+		},
+	},
+});
+```
+
 ## Environment Variables
 
 - `CLOUDFLARE_ENV` selects a Wrangler environment.
@@ -58,7 +73,10 @@ fallback.
 
 ## Examples
 
-- `examples/basic-worker` builds a plain Worker entrypoint.
+- `examples/basic-worker` builds a plain Worker entrypoint with inline Worker
+  config.
+- `examples/react-app` builds a React browser app and Cloudflare Worker API in
+  one Rsbuild project without a `wrangler.json` file.
 
 ## Initial Scope
 

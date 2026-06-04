@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"composite": true,
+		"isolatedModules": true,
+		"lib": ["ES2022"],
+		"module": "Preserve",
+		"moduleDetection": "force",
+		"moduleResolution": "Bundler",
+		"noEmit": true,
+		"noImplicitOverride": true,
+		"noUncheckedIndexedAccess": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "ES2022",
+		"types": ["node"],
+		"verbatimModuleSyntax": true
+	},
+	"include": ["rsbuild.config.ts"]
+}
