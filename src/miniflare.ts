@@ -2,6 +2,8 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { Log, LogLevel, Miniflare } from "miniflare";
 import * as wrangler from "wrangler";
+import { createRuntimeAssetsConfig } from "./assets";
+import type { AssetsEnvironments } from "./assets";
 import type { PersistState, ResolvedPluginConfig } from "./config";
 import type {
   MiniflareOptions,
@@ -41,6 +43,7 @@ export class MiniflareController {
 export function createMiniflareOptions(
   resolvedConfig: ResolvedPluginConfig,
   workerOutputDirectory: string,
+  environments?: AssetsEnvironments,
 ): MiniflareOptions {
   const main = path.join(workerOutputDirectory, "index.js");
   const runtimeConfig: Unstable_Config = {
@@ -48,7 +51,7 @@ export function createMiniflareOptions(
     main,
     no_bundle: true,
     rules: [{ type: "ESModule", globs: ["**/*.js", "**/*.mjs"] }],
-    assets: undefined,
+    assets: createRuntimeAssetsConfig(resolvedConfig, environments),
   };
   const miniflareWorkerOptions = wrangler.unstable_getMiniflareWorkerOptions(
     runtimeConfig,

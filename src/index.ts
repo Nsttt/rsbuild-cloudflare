@@ -1,10 +1,12 @@
 import * as path from "node:path";
 import { assertWranglerVersion } from "./assert-wrangler-version";
+import { createAssetsEnvironments } from "./assets";
 import { resolvePluginConfig } from "./config";
 import { toRequest, writeResponse } from "./http";
 import { createMiniflareOptions, MiniflareController } from "./miniflare";
 import { emitWorkerConfigAsset, writeDeployConfig } from "./output";
 import { createWorkerEnvironmentConfig, getOutputDirectory } from "./rsbuild-config";
+import type { AssetsEnvironments } from "./assets";
 import type { PluginConfig, ResolvedPluginConfig } from "./config";
 import type { RsbuildPlugin } from "@rsbuild/core";
 
@@ -17,6 +19,7 @@ await assertWranglerVersion();
  */
 export function cloudflare(pluginConfig: PluginConfig = {}): RsbuildPlugin {
   let resolvedConfig: ResolvedPluginConfig | undefined;
+  let assetsEnvironments: AssetsEnvironments | undefined;
   const miniflareController = new MiniflareController();
 
   return {
@@ -39,12 +42,26 @@ export function cloudflare(pluginConfig: PluginConfig = {}): RsbuildPlugin {
         });
       });
 
+      api.onBeforeBuild(({ environments: nextEnvironments }) => {
+        assetsEnvironments = createAssetsEnvironments(nextEnvironments);
+      });
+
+      api.onBeforeDevCompile(({ environments: nextEnvironments }) => {
+        assetsEnvironments = createAssetsEnvironments(nextEnvironments);
+      });
+
       api.processAssets({ stage: "additional" }, ({ assets, environment, sources }) => {
         if (!resolvedConfig || environment.name !== resolvedConfig.environmentName) {
           return;
         }
 
-        emitWorkerConfigAsset(resolvedConfig, assets, sources);
+        emitWorkerConfigAsset(
+          resolvedConfig,
+          environment.distPath,
+          assetsEnvironments,
+          assets,
+          sources,
+        );
       });
 
       api.onAfterBuild(() => {
@@ -67,6 +84,7 @@ export function cloudflare(pluginConfig: PluginConfig = {}): RsbuildPlugin {
               resolvedConfig.root,
               getOutputDirectory(api.getRsbuildConfig(), resolvedConfig.environmentName),
             ),
+            assetsEnvironments,
           ),
         );
       });

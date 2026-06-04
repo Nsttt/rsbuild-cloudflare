@@ -10,6 +10,9 @@ export default defineConfig({
         name: "rsbuild-cloudflare-react-app",
         main: "worker/index.ts",
         compatibility_date: "2025-01-01",
+        assets: {
+          not_found_handling: "single-page-application",
+        },
         vars: {
           MESSAGE: "hello from a React Rsbuild app",
         },

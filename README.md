@@ -69,6 +69,23 @@ cloudflare({
 });
 ```
 
+For applications with a browser/client environment, add Wrangler `assets`
+options to the Worker config. The plugin fills `assets.directory` with the
+client build output:
+
+```ts
+cloudflare({
+  config: {
+    name: "my-app",
+    main: "worker/index.ts",
+    compatibility_date: "2025-01-01",
+    assets: {
+      not_found_handling: "single-page-application",
+    },
+  },
+});
+```
+
 ## Environment Variables
 
 - `CLOUDFLARE_ENV` selects a Wrangler environment.
@@ -101,6 +118,8 @@ number to pin it.
 
 - bundled module Worker files
 - a generated `wrangler.json` with `main` pointing at the built Worker entry
+- a generated `assets.directory` when the project has a web-target Rsbuild
+  environment or the Worker config provides an explicit assets directory
 - `.wrangler/deploy/config.json` so `wrangler deploy` can discover the generated
   config
 
@@ -126,4 +145,5 @@ Worker loop:
 - Rsbuild Worker environment output targeting module Workers
 - `wrangler.json` emission beside the compiled Worker entry
 - `.wrangler/deploy/config.json` emission for Wrangler deploy discovery
+- static asset output discovery for web-target Rsbuild environments
 - Miniflare-backed development middleware
