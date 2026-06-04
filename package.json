@@ -1,0 +1,62 @@
+{
+	"name": "rsbuild-cloudflare",
+	"version": "0.0.0",
+	"description": "Cloudflare Workers plugin for Rsbuild",
+	"keywords": [
+		"cloudflare",
+		"cloudflare-workers",
+		"rsbuild",
+		"rsbuild-plugin",
+		"workers"
+	],
+	"license": "MIT",
+	"packageManager": "pnpm@10.33.0",
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"type": "module",
+	"sideEffects": false,
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "rslib",
+		"check": "pnpm check:type && pnpm test:ci && pnpm build",
+		"check:type": "tsc --build",
+		"dev": "rslib --watch",
+		"examples:build": "pnpm build && pnpm --dir examples/basic-worker build",
+		"prepack": "pnpm build",
+		"test": "vitest run",
+		"test:ci": "pnpm test",
+		"test:watch": "vitest"
+	},
+	"dependencies": {
+		"miniflare": "^4.20260603.0",
+		"wrangler": "^4.98.0"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20260603.1",
+		"@microsoft/api-extractor": "^7.52.8",
+		"@rsbuild/core": "2.0.9",
+		"@rslib/core": "0.22.0",
+		"@types/node": "22.15.17",
+		"typescript": "5.8.3",
+		"vitest": "4.1.0"
+	},
+	"peerDependencies": {
+		"@rsbuild/core": "^2.0.0",
+		"wrangler": "^4.98.0"
+	}
+}

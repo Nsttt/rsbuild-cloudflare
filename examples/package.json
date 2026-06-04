@@ -1,0 +1,10 @@
+{
+	"name": "rsbuild-cloudflare-examples",
+	"private": true,
+	"scripts": {
+		"build": "pnpm --dir basic-worker build",
+		"check:type": "pnpm --dir basic-worker check:type",
+		"deploy:dry-run": "pnpm --dir basic-worker deploy:dry-run",
+		"dev": "pnpm --dir basic-worker dev"
+	}
+}
