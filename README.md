@@ -111,6 +111,15 @@ cloudflare({
 Set `inspectorPort: false` to disable the Worker inspector, or pass a port
 number to pin it.
 
+Remote bindings are enabled by default for local development. Disable remote
+binding proxy setup when you want every binding to stay local:
+
+```ts
+cloudflare({
+  remoteBindings: false,
+});
+```
+
 ## Build Output
 
 `rsbuild build` emits a Worker environment under

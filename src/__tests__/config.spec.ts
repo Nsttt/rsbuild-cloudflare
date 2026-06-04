@@ -22,6 +22,23 @@ describe("resolvePluginConfig", () => {
     expect(resolved.workerConfig.name).toBe("inline-worker");
     expect(resolved.workerConfig.main).toBe("src/index.ts");
     expect(resolved.persistState).toBe(false);
+    expect(resolved.remoteBindings).toBe(true);
+  });
+
+  test("can disable remote bindings", ({ expect }) => {
+    const root = mkdtempSync(join(tmpdir(), "rsbuild-cloudflare-"));
+    const resolved = resolvePluginConfig(
+      {
+        config: {
+          name: "inline-worker",
+          main: "src/index.ts",
+        },
+        remoteBindings: false,
+      },
+      { root },
+    );
+
+    expect(resolved.remoteBindings).toBe(false);
   });
 
   test("resolves wrangler config", ({ expect }) => {

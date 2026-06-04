@@ -8,5 +8,6 @@ Initial experimental release.
 - Resolve Wrangler config from files, inline plugin options, or environment.
 - Emit deployable Worker output and Wrangler deploy discovery config.
 - Discover web-target Rsbuild output for Wrangler static assets.
+- Add remote binding proxy support for local development.
 - Serve development requests through Miniflare-backed middleware.
 - Add basic Worker and React app examples.

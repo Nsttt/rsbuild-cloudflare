@@ -13,10 +13,32 @@ import type {
 } from "miniflare";
 import type { SourcelessWorkerOptions, Unstable_Config } from "wrangler";
 
+type RemoteProxySessionData = Awaited<
+  ReturnType<typeof wrangler.maybeStartOrUpdateRemoteProxySession>
+>;
+type RemoteProxyConnectionString =
+  NonNullable<RemoteProxySessionData>["session"]["remoteProxyConnectionString"];
+
 export class MiniflareController {
   #miniflare: Miniflare | undefined;
+  #remoteProxySessionData: RemoteProxySessionData = null;
 
-  async startOrUpdate(options: MiniflareOptions): Promise<void> {
+  async startOrUpdate(
+    resolvedConfig: ResolvedPluginConfig,
+    workerOutputDirectory: string,
+    environments?: AssetsEnvironments,
+  ): Promise<void> {
+    this.#remoteProxySessionData = await maybeStartRemoteProxySession(
+      resolvedConfig,
+      this.#remoteProxySessionData,
+    );
+    const options = createMiniflareOptions(
+      resolvedConfig,
+      workerOutputDirectory,
+      environments,
+      this.#remoteProxySessionData?.session.remoteProxyConnectionString,
+    );
+
     if (this.#miniflare) {
       await this.#miniflare.setOptions(options);
     } else {
@@ -36,7 +58,9 @@ export class MiniflareController {
 
   async dispose(): Promise<void> {
     await this.#miniflare?.dispose();
+    await this.#remoteProxySessionData?.session.dispose();
     this.#miniflare = undefined;
+    this.#remoteProxySessionData = null;
   }
 }
 
@@ -44,6 +68,7 @@ export function createMiniflareOptions(
   resolvedConfig: ResolvedPluginConfig,
   workerOutputDirectory: string,
   environments?: AssetsEnvironments,
+  remoteProxyConnectionString?: RemoteProxyConnectionString,
 ): MiniflareOptions {
   const main = path.join(workerOutputDirectory, "index.js");
   const runtimeConfig: Unstable_Config = {
@@ -56,6 +81,7 @@ export function createMiniflareOptions(
   const miniflareWorkerOptions = wrangler.unstable_getMiniflareWorkerOptions(
     runtimeConfig,
     resolvedConfig.cloudflareEnv,
+    remoteProxyConnectionString ? { remoteProxyConnectionString } : undefined,
   );
   const { modulesRules, ...workerOptions } = miniflareWorkerOptions.workerOptions;
   const worker = {
@@ -72,6 +98,27 @@ export function createMiniflareOptions(
     telemetry: { enabled: false },
     workers: [worker, ...miniflareWorkerOptions.externalWorkers],
   };
+}
+
+async function maybeStartRemoteProxySession(
+  resolvedConfig: ResolvedPluginConfig,
+  previousSessionData: RemoteProxySessionData,
+): Promise<RemoteProxySessionData> {
+  if (!resolvedConfig.remoteBindings) {
+    return null;
+  }
+
+  const bindings =
+    wrangler.unstable_convertConfigBindingsToStartWorkerBindings(resolvedConfig.workerConfig) ?? {};
+
+  return wrangler.maybeStartOrUpdateRemoteProxySession(
+    {
+      name: resolvedConfig.workerConfig.name,
+      bindings,
+      account_id: resolvedConfig.workerConfig.account_id,
+    },
+    previousSessionData,
+  );
 }
 
 function getWorkerModules(

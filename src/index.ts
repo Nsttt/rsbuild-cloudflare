@@ -3,7 +3,7 @@ import { assertWranglerVersion } from "./assert-wrangler-version";
 import { createAssetsEnvironments } from "./assets";
 import { resolvePluginConfig } from "./config";
 import { toRequest, writeResponse } from "./http";
-import { createMiniflareOptions, MiniflareController } from "./miniflare";
+import { MiniflareController } from "./miniflare";
 import { emitWorkerConfigAsset, writeDeployConfig } from "./output";
 import { createWorkerEnvironmentConfig, getOutputDirectory } from "./rsbuild-config";
 import type { AssetsEnvironments } from "./assets";
@@ -78,14 +78,12 @@ export function cloudflare(pluginConfig: PluginConfig = {}): RsbuildPlugin {
         }
 
         await miniflareController.startOrUpdate(
-          createMiniflareOptions(
-            resolvedConfig,
-            path.resolve(
-              resolvedConfig.root,
-              getOutputDirectory(api.getRsbuildConfig(), resolvedConfig.environmentName),
-            ),
-            assetsEnvironments,
+          resolvedConfig,
+          path.resolve(
+            resolvedConfig.root,
+            getOutputDirectory(api.getRsbuildConfig(), resolvedConfig.environmentName),
           ),
+          assetsEnvironments,
         );
       });
 

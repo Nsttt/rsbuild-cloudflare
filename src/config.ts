@@ -14,6 +14,7 @@ export interface PluginConfig {
   config?: WorkerConfigCustomizer;
   persistState?: PersistState;
   inspectorPort?: number | false;
+  remoteBindings?: boolean;
 }
 
 export interface ResolvedPluginConfig {
@@ -28,6 +29,7 @@ export interface ResolvedPluginConfig {
   };
   persistState: PersistState;
   inspectorPort: number | false | undefined;
+  remoteBindings: boolean;
 }
 
 export function resolvePluginConfig(
@@ -68,6 +70,7 @@ export function resolvePluginConfig(
     workerConfig: customizedConfig as ResolvedPluginConfig["workerConfig"],
     persistState: pluginConfig.persistState ?? true,
     inspectorPort: pluginConfig.inspectorPort,
+    remoteBindings: pluginConfig.remoteBindings ?? true,
   };
 }
 
