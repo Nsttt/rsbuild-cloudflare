@@ -16,76 +16,76 @@ await assertWranglerVersion();
  * Rsbuild plugin that builds and serves Cloudflare Workers with Wrangler config.
  */
 export function cloudflare(pluginConfig: PluginConfig = {}): RsbuildPlugin {
-	let resolvedConfig: ResolvedPluginConfig | undefined;
-	const miniflareController = new MiniflareController();
+  let resolvedConfig: ResolvedPluginConfig | undefined;
+  const miniflareController = new MiniflareController();
 
-	return {
-		name: "rsbuild-cloudflare",
-		setup(api) {
-			api.modifyRsbuildConfig((config, { mergeRsbuildConfig }) => {
-				resolvedConfig = resolvePluginConfig(pluginConfig, {
-					root: config.root
-						? path.resolve(api.context.rootPath, config.root)
-						: api.context.rootPath,
-				});
+  return {
+    name: "rsbuild-cloudflare",
+    setup(api) {
+      api.modifyRsbuildConfig((config, { mergeRsbuildConfig }) => {
+        resolvedConfig = resolvePluginConfig(pluginConfig, {
+          root: config.root
+            ? path.resolve(api.context.rootPath, config.root)
+            : api.context.rootPath,
+        });
 
-				return mergeRsbuildConfig(config, {
-					environments: {
-						[resolvedConfig.environmentName]: createWorkerEnvironmentConfig(resolvedConfig, config),
-					},
-					dev: {
-						writeToDisk: true,
-					},
-				});
-			});
+        return mergeRsbuildConfig(config, {
+          environments: {
+            [resolvedConfig.environmentName]: createWorkerEnvironmentConfig(resolvedConfig, config),
+          },
+          dev: {
+            writeToDisk: true,
+          },
+        });
+      });
 
-			api.processAssets({ stage: "additional" }, ({ assets, environment, sources }) => {
-				if (!resolvedConfig || environment.name !== resolvedConfig.environmentName) {
-					return;
-				}
+      api.processAssets({ stage: "additional" }, ({ assets, environment, sources }) => {
+        if (!resolvedConfig || environment.name !== resolvedConfig.environmentName) {
+          return;
+        }
 
-				emitWorkerConfigAsset(resolvedConfig, assets, sources);
-			});
+        emitWorkerConfigAsset(resolvedConfig, assets, sources);
+      });
 
-			api.onAfterBuild(() => {
-				if (!resolvedConfig) {
-					return;
-				}
+      api.onAfterBuild(() => {
+        if (!resolvedConfig) {
+          return;
+        }
 
-				writeDeployConfig(resolvedConfig, api.getRsbuildConfig());
-			});
+        writeDeployConfig(resolvedConfig, api.getRsbuildConfig());
+      });
 
-			api.onAfterDevCompile(async ({ environments }) => {
-				if (!resolvedConfig || !environments[resolvedConfig.environmentName]) {
-					return;
-				}
+      api.onAfterDevCompile(async ({ environments }) => {
+        if (!resolvedConfig || !environments[resolvedConfig.environmentName]) {
+          return;
+        }
 
-				await miniflareController.startOrUpdate(
-					createMiniflareOptions(
-						resolvedConfig,
-						path.resolve(
-							resolvedConfig.root,
-							getOutputDirectory(api.getRsbuildConfig(), resolvedConfig.environmentName),
-						),
-					),
-				);
-			});
+        await miniflareController.startOrUpdate(
+          createMiniflareOptions(
+            resolvedConfig,
+            path.resolve(
+              resolvedConfig.root,
+              getOutputDirectory(api.getRsbuildConfig(), resolvedConfig.environmentName),
+            ),
+          ),
+        );
+      });
 
-			api.onBeforeStartDevServer(({ server }) => {
-				server.middlewares.use(async (req, res, next) => {
-					try {
-						const request = toRequest(req);
-						const response = await miniflareController.dispatchFetch(request);
-						await writeResponse(res, response);
-					} catch (error) {
-						next(error);
-					}
-				});
-			});
+      api.onBeforeStartDevServer(({ server }) => {
+        server.middlewares.use(async (req, res, next) => {
+          try {
+            const request = toRequest(req);
+            const response = await miniflareController.dispatchFetch(request);
+            await writeResponse(res, response);
+          } catch (error) {
+            next(error);
+          }
+        });
+      });
 
-			api.onCloseDevServer(async () => {
-				await miniflareController.dispose();
-			});
-		},
-	};
+      api.onCloseDevServer(async () => {
+        await miniflareController.dispose();
+      });
+    },
+  };
 }

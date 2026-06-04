@@ -19,7 +19,7 @@ import { defineConfig } from "@rsbuild/core";
 import { cloudflare } from "rsbuild-cloudflare";
 
 export default defineConfig({
-	plugins: [cloudflare()],
+  plugins: [cloudflare()],
 });
 ```
 
@@ -33,12 +33,12 @@ import { defineConfig } from "@rsbuild/core";
 import { cloudflare } from "rsbuild-cloudflare";
 
 export default defineConfig({
-	plugins: [
-		cloudflare({
-			configPath: "wrangler.json",
-			persistState: true,
-		}),
-	],
+  plugins: [
+    cloudflare({
+      configPath: "wrangler.json",
+      persistState: true,
+    }),
+  ],
 });
 ```
 
@@ -46,11 +46,11 @@ You can also provide a Wrangler config override inline:
 
 ```ts
 cloudflare({
-	config: {
-		name: "my-worker",
-		main: "src/index.ts",
-		compatibility_date: "2025-01-01",
-	},
+  config: {
+    name: "my-worker",
+    main: "src/index.ts",
+    compatibility_date: "2025-01-01",
+  },
 });
 ```
 
@@ -58,14 +58,14 @@ Inline config can be used without a `wrangler.json` file:
 
 ```ts
 cloudflare({
-	config: {
-		name: "my-worker",
-		main: "src/index.ts",
-		compatibility_date: "2025-01-01",
-		vars: {
-			MESSAGE: "hello",
-		},
-	},
+  config: {
+    name: "my-worker",
+    main: "src/index.ts",
+    compatibility_date: "2025-01-01",
+    vars: {
+      MESSAGE: "hello",
+    },
+  },
 });
 ```
 

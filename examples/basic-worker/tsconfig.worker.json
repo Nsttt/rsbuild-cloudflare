@@ -1,19 +1,19 @@
 {
-	"compilerOptions": {
-		"composite": true,
-		"isolatedModules": true,
-		"lib": ["ES2022"],
-		"module": "Preserve",
-		"moduleDetection": "force",
-		"moduleResolution": "Bundler",
-		"noEmit": true,
-		"noImplicitOverride": true,
-		"noUncheckedIndexedAccess": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"target": "ES2022",
-		"types": ["@cloudflare/workers-types/experimental"]
-	},
-	"include": ["src"]
+  "compilerOptions": {
+    "composite": true,
+    "isolatedModules": true,
+    "lib": ["ES2022"],
+    "module": "Preserve",
+    "moduleDetection": "force",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
+    "types": ["@cloudflare/workers-types/experimental"]
+  },
+  "include": ["src"]
 }

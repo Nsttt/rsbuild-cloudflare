@@ -6,11 +6,11 @@ import "./styles.css";
 const root = document.getElementById("root");
 
 if (!root) {
-	throw new Error("Missing #root element");
+  throw new Error("Missing #root element");
 }
 
 createRoot(root).render(
-	<StrictMode>
-		<App />
-	</StrictMode>,
+  <StrictMode>
+    <App />
+  </StrictMode>,
 );

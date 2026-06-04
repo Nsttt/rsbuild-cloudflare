@@ -1,21 +1,21 @@
 {
-	"compilerOptions": {
-		"composite": true,
-		"isolatedModules": true,
-		"jsx": "react-jsx",
-		"lib": ["ES2022", "DOM", "DOM.Iterable"],
-		"module": "Preserve",
-		"moduleDetection": "force",
-		"moduleResolution": "Bundler",
-		"noEmit": true,
-		"noImplicitOverride": true,
-		"noUncheckedIndexedAccess": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"target": "ES2022",
-		"types": ["react", "react-dom"],
-		"verbatimModuleSyntax": true
-	},
-	"include": ["src"]
+  "compilerOptions": {
+    "composite": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "Preserve",
+    "moduleDetection": "force",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
+    "types": ["react", "react-dom"],
+    "verbatimModuleSyntax": true
+  },
+  "include": ["src"]
 }

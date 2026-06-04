@@ -1,25 +1,25 @@
 {
-	"name": "rsbuild-cloudflare-example-react-app",
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"build": "rsbuild build",
-		"check:type": "tsc --build",
-		"deploy:dry-run": "pnpm build && wrangler deploy --dry-run",
-		"dev": "rsbuild dev --host 127.0.0.1"
-	},
-	"dependencies": {
-		"react": "19.2.7",
-		"react-dom": "19.2.7"
-	},
-	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20260603.1",
-		"@rsbuild/core": "2.0.9",
-		"@rsbuild/plugin-react": "2.0.1",
-		"@types/react": "19.2.16",
-		"@types/react-dom": "19.2.3",
-		"rsbuild-cloudflare": "workspace:*",
-		"typescript": "5.8.3",
-		"wrangler": "^4.98.0"
-	}
+  "name": "rsbuild-cloudflare-example-react-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rsbuild build",
+    "check:type": "tsc --build",
+    "deploy:dry-run": "pnpm build && wrangler deploy --dry-run",
+    "dev": "rsbuild dev --host 127.0.0.1"
+  },
+  "dependencies": {
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260603.1",
+    "@rsbuild/core": "2.0.9",
+    "@rsbuild/plugin-react": "2.0.1",
+    "@types/react": "19.2.16",
+    "@types/react-dom": "19.2.3",
+    "rsbuild-cloudflare": "workspace:*",
+    "typescript": "5.8.3",
+    "wrangler": "^4.98.0"
+  }
 }
