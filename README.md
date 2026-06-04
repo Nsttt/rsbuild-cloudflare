@@ -106,5 +106,28 @@ Run the local release gate before publishing:
 
 ```sh
 pnpm release:check
+```
+
+For the first manual publish from a local checkout:
+
+```sh
+pnpm view rsbuild-cloudflare version
+pnpm whoami
+pnpm login
+pnpm publish --access public
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+If `pnpm view` returns 404, the package name is still unpublished. If
+`pnpm whoami` fails, authenticate with npm before publishing. Create the git tag
+only after npm publish succeeds.
+
+Future releases can use Changesets:
+
+```sh
+pnpm changeset
+pnpm release:version
+pnpm release:check
 pnpm release:publish
 ```

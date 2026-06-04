@@ -20,6 +20,7 @@
     "url": "git+https://github.com/Nsttt/rsbuild-cloudflare.git"
   },
   "files": [
+    "CHANGELOG.md",
     "dist",
     "README.md"
   ],

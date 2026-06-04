@@ -6,6 +6,12 @@ Create a changeset for user-facing package changes:
 pnpm changeset
 ```
 
+Run the release gate:
+
+```sh
+pnpm release:check
+```
+
 Prepare a release commit:
 
 ```sh
